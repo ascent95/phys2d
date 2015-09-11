@@ -1,25 +1,50 @@
 #ifndef ENTITY_H_INCLUDED
 #define ENTITY_H_INCLUDED
 
+#include <vector>
+#include "vec2.h"
+
 class Entity
 {
-    public:
-        draw( SDL_Renderer *renderer );
+public:
+    virtual void draw( SDL_Renderer *renderer ) = 0; //Draws the shape on the screen.
 
-    protected:
+    void move();
+        
+    void add_force( Vec2 new_force );
+        
+protected:
+    vec2d force;
+    vec2d velocity;
+    vec2d position; //Represents the centre
+    Material m_material;
+    MassData m_mass_data;
+    vector<*Entity> m_grid_entries;
+//Needs to contain a list of grid cells which it is in.
+};
 
-    private:
-        Material m_material;
-        MassData m_mass_data;
+class Circle : public Entity
+{
+public:
+    void draw( SDL_Renderer *renderer ) override {};
+private:
+    double radius;
+};
 
-    //Needs to contain a list of grid cells which it is in.
-}
+class Rectangle : public Entity
+{
+public:
+    void draw( SDL_Renderer *renderer ) override {};
+private:
+    double width;
+    double height;
+};
 
 struct Material
 {
     double density;
     double restitution;
-}
+};
 
 struct MassData
 {
@@ -27,7 +52,7 @@ struct MassData
     double inv_mass;
     double inertia;
     double inv_inertia;
-}
+};
 
 //Define other derived classes here.
 #endif // ENTITY_H_INCLUDED

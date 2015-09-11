@@ -5,7 +5,7 @@
 
 #include "screen.h"
 #include <SDL2/SDL.h>
-#include <stdio.h>
+#include <cstdio>
 
 bool Screen::init()
 {
@@ -13,7 +13,7 @@ bool Screen::init()
 
   if( SDL_Init( SDL_INIT_VIDEO ) )
   {
-      printf( "SDL could not initialise! SDL Error: %s\n", SDL_GetError() );
+      std::printf( "SDL could not initialise! SDL Error: %s\n", SDL_GetError() );
       success = false;
   }
   else
@@ -21,7 +21,7 @@ bool Screen::init()
       m_window = SDL_CreateWindow( "Circles!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
       if( m_window == NULL )
       {
-	  printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+	  std::printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
 	  success = false;
       }
       else
@@ -29,7 +29,7 @@ bool Screen::init()
 	  m_renderer = SDL_CreateRenderer( m_window, -1, SDL_RENDERER_ACCELERATED );
 	  if( m_renderer == NULL )
 	  {
-	      printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+	      std::printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
 	      success = false;
 	  }
 	  else

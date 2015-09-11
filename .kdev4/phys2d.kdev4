@@ -43,3 +43,6 @@ Start With=ApplicationOutput
 
 [Project]
 VersionControlSupport=kdevgit
+
+[SourceFileTemplates]
+LastUsedTemplate=/home/matt/.kde/share/apps/kdevfiletemplates/template_descriptions/cpp_basic.desktop
