@@ -6,11 +6,14 @@
 class Grid
 {
 public:
+    Grid() : m_unique( 0 ) {}
+    
     void add( Entity *e );
-	
-	void find_collisions(); //Go through the grid and check collisions within each cell.
-	//Will then generate manifolds and feed them to the collision resolution function. 
+
+    void find_collisions(); //Go through the grid and check collisions within each cell.
+    //Will then generate manifolds and feed them to the collision resolution function. 
 private:
-    vector<*Entity> **m_entities;
-}
+    std::vector< Entity* > **m_entities;
+    int m_unique;
+};
 #endif // GRID_H_INCLUDED

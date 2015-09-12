@@ -5,10 +5,23 @@ CMakeFiles/phys2d.dir/source/entity.cpp.o: ../source/entity.cpp
 
 CMakeFiles/phys2d.dir/source/grid.cpp.o: ../source/grid.cpp
 
+CMakeFiles/phys2d.dir/source/main.cpp.o: ../include/entity.h
+CMakeFiles/phys2d.dir/source/main.cpp.o: ../include/grid.h
+CMakeFiles/phys2d.dir/source/main.cpp.o: ../include/screen.h
+CMakeFiles/phys2d.dir/source/main.cpp.o: ../include/vec2.h
+CMakeFiles/phys2d.dir/source/main.cpp.o: ../include/world.h
 CMakeFiles/phys2d.dir/source/main.cpp.o: ../source/main.cpp
 
+CMakeFiles/phys2d.dir/source/screen.cpp.o: ../include/entity.h
+CMakeFiles/phys2d.dir/source/screen.cpp.o: ../include/grid.h
 CMakeFiles/phys2d.dir/source/screen.cpp.o: ../include/screen.h
+CMakeFiles/phys2d.dir/source/screen.cpp.o: ../include/vec2.h
+CMakeFiles/phys2d.dir/source/screen.cpp.o: ../include/world.h
 CMakeFiles/phys2d.dir/source/screen.cpp.o: ../source/screen.cpp
 
+CMakeFiles/phys2d.dir/source/world.cpp.o: ../include/entity.h
+CMakeFiles/phys2d.dir/source/world.cpp.o: ../include/grid.h
+CMakeFiles/phys2d.dir/source/world.cpp.o: ../include/vec2.h
+CMakeFiles/phys2d.dir/source/world.cpp.o: ../include/world.h
 CMakeFiles/phys2d.dir/source/world.cpp.o: ../source/world.cpp
 

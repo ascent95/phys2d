@@ -4,6 +4,20 @@
 #include <vector>
 #include "vec2.h"
 
+struct Material
+{
+    double density;
+    double restitution;
+};
+
+struct MassData
+{
+    double mass;
+    double inv_mass;
+    double inertia;
+    double inv_inertia;
+};
+
 class Entity
 {
 public:
@@ -11,7 +25,7 @@ public:
 
     void move();
         
-    void add_force( Vec2 new_force );
+    void add_force( vec2d new_force );
         
 protected:
     vec2d force;
@@ -19,7 +33,7 @@ protected:
     vec2d position; //Represents the centre
     Material m_material;
     MassData m_mass_data;
-    vector<*Entity> m_grid_entries;
+    std::vector<Entity*> m_grid_entries;
 //Needs to contain a list of grid cells which it is in.
 };
 
@@ -40,19 +54,7 @@ private:
     double height;
 };
 
-struct Material
-{
-    double density;
-    double restitution;
-};
 
-struct MassData
-{
-    double mass;
-    double inv_mass;
-    double inertia;
-    double inv_inertia;
-};
 
 //Define other derived classes here.
 #endif // ENTITY_H_INCLUDED
