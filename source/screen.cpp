@@ -50,7 +50,8 @@ bool Screen::init( const char *title )
 
 void Screen::clear()
 {
-
+    SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+    SDL_RenderClear( m_renderer );
 }
 
 void Screen::handle_events()
@@ -71,7 +72,7 @@ bool Screen::is_running()
 
 void Screen::render()
 {
-
+    SDL_RenderPresent( m_renderer );
 }
 
 void Screen::quit()

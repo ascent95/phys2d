@@ -3,56 +3,28 @@
 
 #include <vector>
 #include "vec2.h"
+#include "interfaces.h"
 #include <SDL2/SDL.h>
 
-struct Material
-{
-    double density;
-    double restitution;
-};
-
-struct MassData
-{
-    double mass;
-    double inv_mass;
-    double inertia;
-    double inv_inertia;
-};
-
-class Entity
-{
-public:
-    virtual void draw( SDL_Renderer *renderer ) = 0; //Draws the shape on the screen.
-
-    void move();
-        
-    void add_force( vec2d new_force );
-        
-protected:
-    vec2d force;
-    vec2d velocity;
-    vec2d position; //Represents the centre
-    Material m_material;
-    MassData m_mass_data;
-    std::vector<Entity*> m_grid_entries;
-//Needs to contain a list of grid cells which it is in.
-};
-
-class Circle : public Entity
+class Circle : public IEntity
 {
 public:
     void draw( SDL_Renderer *renderer ) override {};
+    
+    void add_to_grid( std::vector<vec2<int>> *coords );
 private:
-    double radius;
+    double m_radius;
 };
 
-class Rectangle : public Entity
+class Rectangle : public IEntity
 {
 public:
     void draw( SDL_Renderer *renderer ) override {};
+    
+    void add_to_grid( std::vector<vec2<int>> *coords );
 private:
-    double width;
-    double height;
+    double m_width;
+    double m_height;
 };
 
 

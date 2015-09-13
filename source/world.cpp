@@ -7,7 +7,7 @@
 #include "world.h"
 #include "screen.h"
 
-World::World ()
+World::World()
 {
     m_screen = new Screen( this );
 }
@@ -22,6 +22,7 @@ void World::run()
     m_screen->init( "Phys2D" );
     while( m_screen->is_running() )
     {
+        m_screen->clear();
         m_screen->handle_events();
         update();
         m_screen->render();
