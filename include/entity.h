@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "vec2.h"
+#include <SDL2/SDL.h>
 
 struct Material
 {

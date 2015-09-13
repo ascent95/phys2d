@@ -5,18 +5,32 @@
  */
 
 #include "world.h"
+#include "screen.h"
 
-void World::add ( Entity *e )
+World::World ()
 {
-    
+    m_screen = new Screen( this );
 }
 
-void World::update()
+World::~World()
 {
-    
+    delete m_screen;
 }
 
-void World::init ( Screen *screen )
+void World::run()
 {
-    m_screen = screen;
+    m_screen->init( "Phys2D" );
+    while( m_screen->is_running() )
+    {
+        m_screen->handle_events();
+        update();
+        m_screen->render();
+    }
+    
+    m_screen->quit();
+}
+
+void World::update ()
+{
+    
 }

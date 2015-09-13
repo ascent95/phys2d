@@ -2,34 +2,29 @@
 #define SCREEN_H_INCLUDED
 
 #include <SDL2/SDL.h>
-#include "world.h"
+#include "interfaces.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
-class Screen
+class Screen : public IScreen
 {
     public:
-        Screen() : m_running( true ) {}
-
-        bool init( const char *title, World *world );
+        Screen( IWorld *wld );
         
+        bool init( const char *title );
         void quit();
-
         void render();
-
         void clear();
-
-        void handle_events(); //These will use the pointer to the world to add new entities
-        
-        bool is_running(); //Returns m_closed
+        void handle_events();
+        bool is_running();
 
     private:
         SDL_Window *m_window;
         SDL_Renderer *m_renderer;
-        World *m_world;
+        IWorld *m_world;
         SDL_Event m_event; //For checking window close
-        bool m_running; //Gets updated by handle_events
+        bool m_running;
 };
 
 #endif // SCREEN_H_INCLUDED

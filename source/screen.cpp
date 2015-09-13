@@ -4,12 +4,18 @@
  */
 
 #include "screen.h"
+#include "world.h"
 #include <SDL2/SDL.h>
 #include <cstdio>
 
-bool Screen::init( const char *title, World *world )
+Screen::Screen( IWorld *wld ) : m_running( true )
 {
-    m_world = world;
+    m_world = wld;
+}
+
+
+bool Screen::init( const char *title )
+{
     bool success = true;
     
     if( SDL_Init( SDL_INIT_VIDEO ) )
