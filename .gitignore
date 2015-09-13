@@ -28,3 +28,7 @@
 *.app
 
 build/
+.kdev4/
+CMakeModules/
+CMakeLists.txt
+*.kdev4
