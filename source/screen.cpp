@@ -80,3 +80,9 @@ void Screen::quit()
     SDL_Quit();
 }
 
+SDL_Renderer *Screen::get_renderer()
+{
+    return m_renderer;
+}
+
+

@@ -14,13 +14,11 @@ public:
     
     void run();
 
-    //void add( Entity *e ); //Might need to change this to some sort of handler of a click event sent from Screen.
-
-    void update(); //Do timestep and update the world. Render to screen.
+    void draw_entities();
 
 private:
     IScreen *m_screen; //Need a pointer to the screen so that we can render entities
-    Grid m_grid;
+    Grid *m_grid;
 };
 
 #endif // WORLD_H_INCLUDED

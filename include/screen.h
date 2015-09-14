@@ -18,6 +18,8 @@ class Screen : public IScreen
         void clear();
         void handle_events();
         bool is_running();
+        
+        SDL_Renderer *get_renderer();
 
     private:
         SDL_Window *m_window;

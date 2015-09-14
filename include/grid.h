@@ -13,16 +13,18 @@ class Grid : public IGrid
 public:
     Grid() : m_unique( 0 ) {}
     
+    ~Grid();
+    
     void init( vec2d min, vec2d max, int px_cell );
     
     void add( IEntity *e );
     
-    void update();
+    void update( Uint32 dt );
     
     void find_collisions(); //Go through the grid and check collisions within each cell.
     //Will then generate manifolds and feed them to the collision resolution function. 
+    std::vector< IEntity* >* get_entities();
     
-    vec2<int> convert_to_cell( vec2d point );
 private:
     std::vector< IEntity* > m_entities;
     std::vector< IEntity* > **m_grid;
@@ -32,6 +34,8 @@ private:
     int m_height; //In cells
     int m_px_cell; //In pixels
     
-    void add_to_cell( int x, int y, IEntity *e ); //Allows an entity to add itself to a cell in the grid
+    void add_to_cell( vec2< int > pos, IEntity *e ); //Adds an entity to a cell
+    vec2<int> convert_to_cell( vec2d point ); //Finds the cell location of a point
+    void insert_in_grid( IEntity *e ); //Uses above functions to insert an entity into all relevant cells
 };
 #endif // GRID_H_INCLUDED

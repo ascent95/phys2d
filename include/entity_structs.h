@@ -1,3 +1,5 @@
+#include "vec2.h"
+
 struct Material
 {
     double density;
@@ -10,4 +12,10 @@ struct MassData
     double inv_mass;
     double inertia;
     double inv_inertia;
+};
+
+struct AABB
+{
+    vec2d min;
+    vec2d max;
 };

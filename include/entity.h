@@ -9,9 +9,13 @@
 class Circle : public IEntity
 {
 public:
-    void draw( SDL_Renderer *renderer ) override {};
+    Circle( vec2d position, double radius );
+    
+    void draw( SDL_Renderer *renderer );
     
     void add_to_grid( std::vector<vec2<int>> *coords );
+    
+    void calc_AABB();
 private:
     double m_radius;
 };
@@ -19,7 +23,7 @@ private:
 class Rectangle : public IEntity
 {
 public:
-    void draw( SDL_Renderer *renderer ) override {};
+    void draw( SDL_Renderer *renderer );
     
     void add_to_grid( std::vector<vec2<int>> *coords );
 private:
