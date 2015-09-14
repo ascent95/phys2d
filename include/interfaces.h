@@ -35,7 +35,7 @@ public:
     
     virtual void init( vec2d min, vec2d max, int px_cell ) = 0;
     
-    virtual void update( Uint32 dt ) = 0;
+    virtual void update( double dt ) = 0;
     
     virtual void find_collisions() = 0; //Go through the grid and check collisions within each cell.
     //Will then generate manifolds and feed them to the collision resolution function. 

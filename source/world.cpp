@@ -25,34 +25,32 @@ void World::run()
     m_screen->init( "Phys2D" );
     vec2d min ( 0, 0 );
     vec2d max ( 640, 480 );
-    m_grid->init( min, max, 10 );
+    m_grid->init( min, max, 20 );
     
     const double fps = 100;
     const double dt = 1 / fps;
     double accumulator = 0;
     
-    double frame_start = SDL_GetTicks() / 1000;
+    double frame_start = SDL_GetTicks() / 1000.0;
     
-    vec2d xy ( 10, 10 );
-    Circle test ( xy, 10 );
+    Circle test ( vec2d { 10, 10 }, 10, vec2d { 100, 20 } );
     m_grid->add( &test );
     
     while( m_screen->is_running() )
     {
-        const double current_time = SDL_GetTicks() / 1000;
+        const double current_time = SDL_GetTicks() / 1000.0;
         accumulator += current_time - frame_start;
         frame_start = current_time;
         
-        if( accumulator > 200 )
+        if( accumulator > 0.2 )
         {
-            accumulator = 200;
+            accumulator = 0.2;
         }
-        
+        m_screen->clear();
+        m_screen->handle_events();
         while( accumulator > dt )
         {
             accumulator -= dt;
-            m_screen->clear();
-            m_screen->handle_events();
             m_grid->update( dt );
         }
         draw_entities();

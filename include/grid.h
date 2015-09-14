@@ -19,7 +19,7 @@ public:
     
     void add( IEntity *e );
     
-    void update( Uint32 dt );
+    void update( double dt );
     
     void find_collisions(); //Go through the grid and check collisions within each cell.
     //Will then generate manifolds and feed them to the collision resolution function. 
@@ -37,5 +37,6 @@ private:
     void add_to_cell( vec2< int > pos, IEntity *e ); //Adds an entity to a cell
     vec2<int> convert_to_cell( vec2d point ); //Finds the cell location of a point
     void insert_in_grid( IEntity *e ); //Uses above functions to insert an entity into all relevant cells
+    void remake_grid();
 };
 #endif // GRID_H_INCLUDED

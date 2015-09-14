@@ -8,9 +8,13 @@ Grid::~Grid()
 {
     for(int i = 0; i < m_width; i++)
     {
-        delete m_grid[ i ];
+        if( m_grid[ i ] ) 
+        {
+            delete[] m_grid[ i ];
+            m_grid[ i ] = nullptr;
+        }
     }
-    delete m_grid;
+    delete[] m_grid;
 }
 
 
@@ -35,12 +39,13 @@ void Grid::add ( IEntity* e )
     
 }
 
-void Grid::update( Uint32 dt )
+void Grid::update( double dt )
 {
     for( std::vector< IEntity* >::iterator it = m_entities.begin(); it != m_entities.end(); ++it )
     {
         (*it)->update( dt );
     }
+    remake_grid();
 }
 
 void Grid::find_collisions()
@@ -76,15 +81,32 @@ void Grid::insert_in_grid ( IEntity* e )
     vec2< int > max_cell = convert_to_cell( aabb.max );
     vec2< int > counter;
     counter = min_cell;
-    for( ; counter.x < max_cell.x; counter.x++ )
+    for( ; counter.x <= max_cell.x; counter.x++ )
     {
-        for(; counter.y < max_cell.y; counter.y++ )
+        for(; counter.y <= max_cell.y; counter.y++ )
         {
             add_to_cell( counter, e );
         }
         counter.y = min_cell.y;
     }
 }
+
+void Grid::remake_grid()
+{
+    for(int i = 0; i < m_width; i++)
+    {
+        if( m_grid[ i ] ) 
+        {
+            delete[] m_grid[ i ];
+            m_grid[ i ] = nullptr;
+        }
+    }
+    for( std::vector< IEntity* >::iterator it = m_entities.begin(); it != m_entities.end(); ++it )
+    {
+        insert_in_grid( *it );
+    }
+}
+
 
 std::vector< IEntity* >* Grid::get_entities()
 {

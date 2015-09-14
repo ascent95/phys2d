@@ -9,11 +9,10 @@
 class Circle : public IEntity
 {
 public:
-    Circle( vec2d position, double radius );
     
+    Circle( vec2d position, double radius, vec2d velocity );
+    Circle( vec2d position, double radius ) : Circle( position, radius, vec2d {0,0} ) {}
     void draw( SDL_Renderer *renderer );
-    
-    void add_to_grid( std::vector<vec2<int>> *coords );
     
     void calc_AABB();
 private:
@@ -24,8 +23,6 @@ class Rectangle : public IEntity
 {
 public:
     void draw( SDL_Renderer *renderer );
-    
-    void add_to_grid( std::vector<vec2<int>> *coords );
 private:
     double m_width;
     double m_height;

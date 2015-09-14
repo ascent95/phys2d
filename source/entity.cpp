@@ -9,10 +9,11 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL.h>
 
-Circle::Circle ( vec2d position, double radius )
+Circle::Circle ( vec2d position, double radius, vec2d velocity )
 {
     m_position = position;
     m_radius = radius;
+    m_velocity = velocity;
     calc_AABB();
 }
 
