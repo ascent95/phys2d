@@ -1,3 +1,6 @@
+#ifndef ENTITY_STRUCTS_H_INCLUDED
+#define ENTITY_STRUCTS_H_INCLUDED
+
 #include "vec2.h"
 
 struct Material
@@ -19,3 +22,5 @@ struct AABB
     vec2d min;
     vec2d max;
 };
+
+#endif

@@ -19,6 +19,8 @@ public:
 private:
     IScreen *m_screen; //Need a pointer to the screen so that we can render entities
     Grid *m_grid;
+    
+    double get_time();
 };
 
 #endif // WORLD_H_INCLUDED
