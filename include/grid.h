@@ -7,6 +7,7 @@
 #include <vector>
 #include "interfaces.h"
 #include "entity.h"
+#include "collision.h"
 
 class Grid : public IGrid
 {
@@ -21,8 +22,11 @@ public:
     
     void update( double dt );
     
-    void find_collisions(); //Go through the grid and check collisions within each cell.
+    void broad_phase( Pair_Cache *ps ); //Go through the grid and check collisions within each cell.
     //Will then generate manifolds and feed them to the collision resolution function. 
+    
+    void narrow_phase( Pair_Cache *ps );
+    
     std::vector< IEntity* >* get_entities();
     
 private:

@@ -31,8 +31,8 @@ void World::run()
     
     double frame_start = get_time();
     
-    Circle test1 ( vec2d { 10, 10 }, 10, vec2d { 10, 0 } );
-    Circle test2 ( vec2d { 100, 10 }, 10, vec2d { -100, 0 } );
+    Circle test1 ( vec2d { 300, 200 }, 10, vec2d { 0, 100 } );
+    Circle test2 ( vec2d { 400, 300 }, 10, vec2d { -100, 0 } );
     m_grid->add( &test1 );
     m_grid->add( &test2 );
     

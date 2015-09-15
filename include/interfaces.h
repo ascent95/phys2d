@@ -3,8 +3,8 @@
 
 #include "vec2.h"
 #include <SDL2/SDL.h>
-#include "entity_structs.h"
 #include <vector>
+#include "entity_structs.h"
 
 class IScreen
 {
@@ -28,6 +28,11 @@ public:
 
 };
 
+class Circle;
+class Rectangle;
+class Pair_Cache;
+struct Manifold;
+
 class IGrid
 {
 public:
@@ -37,8 +42,9 @@ public:
     
     virtual void update( double dt ) = 0;
     
-    virtual void find_collisions() = 0; //Go through the grid and check collisions within each cell.
-    //Will then generate manifolds and feed them to the collision resolution function. 
+    virtual void broad_phase( Pair_Cache *ps ) = 0; //Go through the grid and check collisions within each cell.
+    
+    virtual void narrow_phase( Pair_Cache *ps ) = 0;
     
     virtual vec2<int> convert_to_cell( vec2d point ) = 0;
 };
@@ -53,11 +59,21 @@ public:
         
     void add_force( vec2d new_force );
     
-    AABB get_AABB();
-    
     virtual void calc_AABB() = 0;
     
+    AABB get_AABB();
+    
+    bool intersect_broad( IEntity *e );
+    
+    virtual bool intersect_visit( IEntity *e ) = 0;
+    
+    virtual bool intersect( Circle *circ ) = 0;
+    
+    virtual bool intersect( Rectangle *rect ) = 0;
+    
     void set_id( int new_id );
+    
+    int get_id();
         
 protected:
     vec2d m_force;

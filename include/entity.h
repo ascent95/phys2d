@@ -14,6 +14,10 @@ public:
     Circle( vec2d position, double radius ) : Circle( position, radius, vec2d {0,0} ) {}
     void draw( SDL_Renderer *renderer );
     
+    bool intersect_visit( IEntity *e );
+    bool intersect( Circle *circ );
+    bool intersect( Rectangle *rect );
+    
     void calc_AABB();
 private:
     double m_radius;
@@ -27,8 +31,6 @@ private:
     double m_width;
     double m_height;
 };
-
-
 
 //Define other derived classes here.
 #endif // ENTITY_H_INCLUDED

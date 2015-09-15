@@ -35,6 +35,7 @@ void Grid::init( vec2d min, vec2d max, int px_cell )
 void Grid::add ( IEntity* e )
 {
     //Add it to the list of entities
+    e->set_id( m_unique++ );
     m_entities.push_back( e );
     
     insert_in_grid( e );
@@ -48,10 +49,12 @@ void Grid::update( double dt )
         (*it)->update( dt );
     }
     remake_grid();
-    find_collisions();
+    Pair_Cache ps;
+    broad_phase( &ps );
+    narrow_phase( &ps );
 }
 
-void Grid::find_collisions()
+void Grid::broad_phase( Pair_Cache *ps ) //Broad phase collision check
 {
     //For each occupied column
     for( int col = 0; col < m_width; col++ )
@@ -69,12 +72,12 @@ void Grid::find_collisions()
                 ++check_against;
                 for(; check_against != m_grid[ col ][ row ].end(); ++check_against )
                 {
-                    if( AABBvsAABB( to_check->get_AABB(), (*check_against)->get_AABB() ) )
+                    if( to_check->intersect_broad( *check_against ) )
                     {
-                        printf( "Colliding\n" );
+                        //If there is an AABB intersection, generate a pair and add it to the cache.
+                        ps->add( Pair { to_check, *check_against } );
                     }
                 }
-                
             }
         }
     }
@@ -86,6 +89,19 @@ void Grid::find_collisions()
                     //Resolve the collision
             
 }
+
+void Grid::narrow_phase ( Pair_Cache* ps )
+{
+    for( std::vector< Pair >::iterator it = ps->entity_pairs.begin(); it != ps->entity_pairs.end(); ++it )
+    {
+        if( (*it).a->intersect_visit( (*it).b ) )
+        {
+            //They intersect and the collision has been resolved
+            
+        }
+    }
+}
+
 
 
 //Private functions 
