@@ -52,6 +52,7 @@ bool Circle::intersect ( Rectangle* rect )
 bool Circle::intersect ( Circle* circ )
 {
     vec2d AtoB = circ->m_position - m_position;
+    
     double rad_lengths = circ->m_radius + m_radius;
     double penetration = rad_lengths - AtoB.length();
     if( penetration > 0 )
@@ -75,16 +76,20 @@ bool Circle::intersect ( Circle* circ )
             
             
         }
-        printf( "Intersecting a Circle\n" );
+        return true;
     }
-    
-    return true;
+    return false;
 }
 
 Rectangle::Rectangle ( vec2d position, double width, double height, vec2d velocity ) : m_width( width ), m_height( height )
 {
     m_position = position;
     m_velocity = velocity;
+    
+    m_material.restitution = 1;
+    
+    m_mass_data.mass = width * height;
+    m_mass_data.inv_mass = 1 / m_mass_data.mass;
 }
 
 
@@ -103,16 +108,55 @@ void Rectangle::calc_AABB()
 
 bool Rectangle::intersect_visit ( IEntity* e )
 {
-    return false;
+    return e->intersect( this );
 }
 
 bool Rectangle::intersect ( Circle* circ )
 {
+    
     return false;
 }
 
 bool Rectangle::intersect ( Rectangle* rect )
 {
+    vec2d AtoB = rect->m_position - m_position;
+    double a_half = ( m_aabb.max.x - m_aabb.min.x ) / 2;
+    double b_half = ( rect->m_aabb.max.x - rect->m_aabb.min.x ) / 2;
+    
+    double x_overlap = a_half + b_half - abs( AtoB.x );
+    
+    if( x_overlap > 0 )
+    {
+        //There is an x overlap
+        a_half = ( m_aabb.max.y - m_aabb.min.y ) / 2;
+        b_half = ( rect->m_aabb.max.y - rect->m_aabb.min.y ) / 2;
+        
+        double y_overlap = a_half + b_half - abs( AtoB.y );
+        if( y_overlap > 0 )
+        {
+            //There is a collision
+            
+            vec2d n ( 0, 0 );
+            if( y_overlap > x_overlap )
+            {
+                n.x = AtoB.x;
+            }
+            else
+            {
+                n.y = AtoB.y;
+            }
+            n.normalize();
+            vec2d u = rect->m_velocity - m_velocity;
+            float vel_along_normal = vec2d::dot( u, n );
+            double max_restitution = std::max( m_material.restitution, rect->m_material.restitution );
+            double j = ( 1 + max_restitution ) * vel_along_normal / ( m_mass_data.inv_mass + rect->m_mass_data.inv_mass );
+            m_velocity.x += j * n.x * m_mass_data.inv_mass;
+            m_velocity.y += j * n.y * m_mass_data.inv_mass;
+            rect->m_velocity.x -= j * n.x * rect->m_mass_data.inv_mass;
+            rect->m_velocity.y -= j * n.y * rect->m_mass_data.inv_mass;
+
+        }
+    }
     return false;
 
 }
