@@ -52,6 +52,7 @@ public:
 class IEntity
 {
 public:
+    IEntity() : m_material( {} ), m_mass_data( {} ), m_aabb( {} ), m_id( 0 ), m_colour( 0xFF000000 ) {}
     ~IEntity() {}
     virtual void draw( SDL_Renderer *renderer ) = 0; //Draws the shape on the screen.
 
@@ -74,6 +75,8 @@ public:
     void set_id( int new_id );
     
     int get_id();
+    
+    void set_colour( Uint32 colour );
         
 protected:
     vec2d m_force;
@@ -83,5 +86,6 @@ protected:
     MassData m_mass_data;
     AABB m_aabb;
     int m_id;
+    Uint32 m_colour;
 };
 #endif 

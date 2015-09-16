@@ -27,3 +27,8 @@ bool IEntity::intersect_broad ( IEntity* e )
 {
     return AABBvsAABB( m_aabb, e->m_aabb );
 }
+
+void IEntity::set_colour ( Uint32 colour )
+{
+    m_colour = colour;
+}

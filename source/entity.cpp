@@ -35,7 +35,7 @@ void Circle::calc_AABB()
 
 void Circle::draw ( SDL_Renderer* renderer )
 {
-    circleRGBA( renderer, m_position.x, m_position.y, m_radius, 0xFF, 0x00, 0xFF, 0xFF );
+    circleColor( renderer, m_position.x, m_position.y, m_radius, m_colour);
 }
 
 bool Circle::intersect_visit ( IEntity* e )
@@ -80,3 +80,42 @@ bool Circle::intersect ( Circle* circ )
     
     return true;
 }
+
+Rectangle::Rectangle ( vec2d position, double width, double height, vec2d velocity ) : m_width( width ), m_height( height )
+{
+    m_position = position;
+    m_velocity = velocity;
+}
+
+
+void Rectangle::draw ( SDL_Renderer* renderer )
+{
+    rectangleColor( renderer, m_aabb.min.x, m_aabb.min.y, m_aabb.max.x, m_aabb.max.y, m_colour );
+}
+
+void Rectangle::calc_AABB()
+{
+    m_aabb.min.x = m_position.x - m_width / 2;
+    m_aabb.min.y = m_position.y - m_height / 2;
+    m_aabb.max.x = m_position.x + m_width / 2;
+    m_aabb.max.y = m_position.y + m_height / 2;
+}
+
+bool Rectangle::intersect_visit ( IEntity* e )
+{
+    return false;
+}
+
+bool Rectangle::intersect ( Circle* circ )
+{
+    return false;
+}
+
+bool Rectangle::intersect ( Rectangle* rect )
+{
+    return false;
+
+}
+
+
+

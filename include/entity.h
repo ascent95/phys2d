@@ -26,7 +26,18 @@ private:
 class Rectangle : public IEntity
 {
 public:
+    Rectangle( vec2d position, double width, double height, vec2d velocity );
+    Rectangle( vec2d position, double width, double height ) : Rectangle( position, width, height, vec2d { 0, 0 } ) {}
     void draw( SDL_Renderer *renderer );
+    
+    void calc_AABB();
+    
+    bool intersect_visit( IEntity *e );
+    
+    bool intersect( Circle *circ );
+    
+    bool intersect( Rectangle *rect );
+    
 private:
     double m_width;
     double m_height;

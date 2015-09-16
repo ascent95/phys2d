@@ -32,9 +32,12 @@ void World::run()
     double frame_start = get_time();
     
     Circle test1 ( vec2d { 300, 200 }, 10, vec2d { 0, 100 } );
-    Circle test2 ( vec2d { 400, 300 }, 10, vec2d { -100, 0 } );
+    Circle test2 ( vec2d { 400, 300 }, 30, vec2d { -100, 0 } );
+    Rectangle test3 ( vec2d { 100, 100 }, 10, 10 , vec2d { 50, 0 } );
+    test3.set_colour( 0xFFFF0000 );
     m_grid->add( &test1 );
     m_grid->add( &test2 );
+    m_grid->add( &test3 );
     
     while( m_screen->is_running() )
     {
