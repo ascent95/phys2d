@@ -1,9 +1,16 @@
 #ifndef WORLD_H_INCLUDED
 #define WORLD_H_INCLUDED
 
-#include "interfaces.h"
-#include "entity.h"
 #include "grid.h"
+#include "screen.h"
+
+class IWorld
+{
+public:
+    virtual ~IWorld() {}
+    virtual void run() = 0;
+
+};
 
 class World : public IWorld//The presenter
 {

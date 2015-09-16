@@ -5,9 +5,40 @@
 #define RESERVED_ENTITIES 10
 
 #include <vector>
-#include "interfaces.h"
-#include "entity.h"
-#include "collision.h"
+#include <string>
+#include "vec2.h"
+
+class IEntity;
+
+struct Pair
+{
+    IEntity *a;
+    IEntity *b;
+};
+
+class Pair_Cache
+{
+public:
+    bool add( Pair man );
+    std::vector< std::string > id_pairs;
+    std::vector< Pair > entity_pairs;
+};
+
+class IGrid
+{
+public:
+    virtual ~IGrid() {}
+    
+    virtual void init( vec2d min, vec2d max, int px_cell ) = 0;
+    
+    virtual void update( double dt ) = 0;
+private:
+    virtual void broad_phase( Pair_Cache *ps ) = 0; //Go through the grid and check collisions within each cell.
+    
+    virtual void narrow_phase( Pair_Cache *ps ) = 0;
+    
+    virtual vec2<int> convert_to_cell( vec2d point ) = 0;
+};
 
 class Grid : public IGrid
 {
@@ -43,4 +74,7 @@ private:
     void insert_in_grid( IEntity *e ); //Uses above functions to insert an entity into all relevant cells
     void remake_grid();
 };
+
+
+
 #endif // GRID_H_INCLUDED

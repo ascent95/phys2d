@@ -2,10 +2,25 @@
 #define SCREEN_H_INCLUDED
 
 #include <SDL2/SDL.h>
-#include "interfaces.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+
+class IScreen
+{
+public:
+    virtual ~IScreen() {}
+    virtual bool init( const char *title ) = 0;
+    virtual void quit() = 0;
+    virtual void render() = 0;
+    virtual void clear() = 0;
+    virtual void handle_events() = 0;
+    virtual bool is_running() = 0;
+    
+    virtual SDL_Renderer *get_renderer() = 0;
+};
+
+class IWorld;
 
 class Screen : public IScreen
 {

@@ -3,14 +3,55 @@
  * Entities can have shapes associated with them, as well as other attributes.
  */
 
-#include "interfaces.h"
 #include "entity.h"
-#include "collision.h"
 #include "vec2.h"
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <math.h>
+
+
+void IEntity::set_id ( int new_id )
+{
+    m_id = new_id;
+}
+
+int IEntity::get_id()
+{
+    return m_id;
+}
+
+AABB IEntity::get_AABB()
+{
+    return m_aabb;
+}
+
+void IEntity::update ( double dt )
+{
+    m_position.x += m_velocity.x * dt;
+    m_position.y += m_velocity.y * dt;
+    calc_AABB();
+}
+
+bool AABBvsAABB( AABB a, AABB b )
+{
+    if( a.max.x < b.min.x || a.min.x > b.max.x ) return false;
+    if( a.min.y > b.max.y || a.max.y < b.min.y ) return false;
+    
+    return true;
+}
+
+bool IEntity::intersect_broad ( IEntity* e )
+{
+    return AABBvsAABB( m_aabb, e->m_aabb );
+}
+
+void IEntity::set_colour ( Uint32 colour )
+{
+    m_colour = colour;
+}
+
+
 
 Circle::Circle ( vec2d position, double radius, vec2d velocity )
 {
@@ -59,6 +100,7 @@ bool Circle::intersect ( Circle* circ )
     {
         vec2d normal = AtoB.normalize();
         vec2d approach = circ->m_velocity - m_velocity;
+        /*
         float vel_along_normal = vec2d::dot( normal, approach );
         
         if( vel_along_normal > 0 )
@@ -76,6 +118,9 @@ bool Circle::intersect ( Circle* circ )
             
             
         }
+        */
+        
+        resolve_collision( normal, approach, circ );
         return true;
     }
     return false;
@@ -113,7 +158,6 @@ bool Rectangle::intersect_visit ( IEntity* e )
 
 bool Rectangle::intersect ( Circle* circ )
 {
-    
     return false;
 }
 
@@ -136,25 +180,19 @@ bool Rectangle::intersect ( Rectangle* rect )
         {
             //There is a collision
             
-            vec2d n ( 0, 0 );
+            vec2d normal ( 0, 0 );
             if( y_overlap > x_overlap )
             {
-                n.x = AtoB.x;
+                normal.x = AtoB.x;
             }
             else
             {
-                n.y = AtoB.y;
+                normal.y = AtoB.y;
             }
-            n.normalize();
-            vec2d u = rect->m_velocity - m_velocity;
-            float vel_along_normal = vec2d::dot( u, n );
-            double max_restitution = std::max( m_material.restitution, rect->m_material.restitution );
-            double j = ( 1 + max_restitution ) * vel_along_normal / ( m_mass_data.inv_mass + rect->m_mass_data.inv_mass );
-            m_velocity.x += j * n.x * m_mass_data.inv_mass;
-            m_velocity.y += j * n.y * m_mass_data.inv_mass;
-            rect->m_velocity.x -= j * n.x * rect->m_mass_data.inv_mass;
-            rect->m_velocity.y -= j * n.y * rect->m_mass_data.inv_mass;
-
+            normal.normalize();
+            vec2d approach = rect->m_velocity - m_velocity;
+            
+            resolve_collision( normal, approach, rect );
         }
     }
     return false;
@@ -162,4 +200,17 @@ bool Rectangle::intersect ( Rectangle* rect )
 }
 
 
+void IEntity::resolve_collision ( vec2d normal, vec2d approach, IEntity* collider )
+{
+    float vel_along_normal = vec2d::dot( approach, normal );
+    
+    if( vel_along_normal > 0 ) return; //Already separating.
+    
+    double max_restitution = std::max( m_material.restitution, collider->m_material.restitution );
+    double j = ( 1 + max_restitution ) * vel_along_normal / ( m_mass_data.inv_mass + collider->m_mass_data.inv_mass );
+    m_velocity.x += j * normal.x * m_mass_data.inv_mass;
+    m_velocity.y += j * normal.y * m_mass_data.inv_mass;
+    collider->m_velocity.x -= j * normal.x * collider->m_mass_data.inv_mass;
+    collider->m_velocity.y -= j * normal.y * collider->m_mass_data.inv_mass;
+}
 

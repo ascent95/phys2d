@@ -7,6 +7,7 @@
 #include "world.h"
 #include "screen.h"
 #include "grid.h"
+#include "entity.h"
 
 World::World()
 {

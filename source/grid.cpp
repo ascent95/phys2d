@@ -1,9 +1,9 @@
 #include "grid.h"
-#include "interfaces.h"
-#include "collision.h"
 #include <vector>
 #include <math.h>
 #include <assert.h>
+#include <algorithm>
+#include "entity.h"
 
 Grid::~Grid()
 {
@@ -26,6 +26,8 @@ void Grid::init( vec2d min, vec2d max, int px_cell )
     double h = max.y - min.y;
     m_width = ( w + px_cell - 1 ) / px_cell;
     m_height = ( h + px_cell - 1 ) / px_cell;
+    
+    assert( px_cell );
     m_px_cell = px_cell;
     
     m_entities.reserve( RESERVED_ENTITIES );
@@ -80,14 +82,7 @@ void Grid::broad_phase( Pair_Cache *ps ) //Broad phase collision check
                 }
             }
         }
-    }
-        //For each occupied cell
-            //Check collisions within cell (AABBvsAABB)
-            //If there is an AABB collisions
-                //Do a close collision check
-                //If there is a close collision
-                    //Resolve the collision
-            
+    }            
 }
 
 void Grid::narrow_phase ( Pair_Cache* ps )
@@ -101,8 +96,6 @@ void Grid::narrow_phase ( Pair_Cache* ps )
         }
     }
 }
-
-
 
 //Private functions 
 void Grid::add_to_cell ( vec2< int > pos, IEntity* e )
@@ -164,5 +157,23 @@ void Grid::remake_grid()
 std::vector< IEntity* >* Grid::get_entities()
 {
     return &m_entities;
+}
+
+bool Pair_Cache::add ( Pair pair )
+{
+    int id_a = pair.a->get_id();
+    int id_b = pair.b->get_id();
+    char str_pair[16];
+    if( id_a < id_b ) sprintf( str_pair, "%d:%d", id_a, id_b );
+    else sprintf( str_pair, "%d:%d", id_a, id_b );
+
+    if( std::find ( id_pairs.begin(), id_pairs.end(), str_pair) == id_pairs.end() )
+    {
+        //Does not contain the pair
+        id_pairs.push_back( str_pair );
+        entity_pairs.push_back( pair );
+        return true; //Was a success. The pair is now added.
+    }
+    return false;
 }
 
