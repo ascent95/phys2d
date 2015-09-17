@@ -37,8 +37,6 @@ public:
     
     virtual void draw( SDL_Renderer *renderer ) = 0; //Draws the shape on the screen.
     
-    virtual void calc_AABB() = 0;   
-    
     virtual bool intersect_visit( IEntity *e ) = 0;
     
     virtual bool intersect( Circle *circ ) = 0;
@@ -58,6 +56,10 @@ public:
     void set_colour( Uint32 colour );
     void set_id( int new_id );    
 protected:
+    virtual void calc_AABB() = 0;
+    virtual void calc_mass() = 0;
+    void circle_vs_rectangle( Circle *circ, Rectangle *rect );
+    
     vec2d m_force;
     vec2d m_velocity;
     vec2d m_position; //Represents the centre
@@ -80,8 +82,12 @@ public:
     bool intersect( Circle *circ );
     bool intersect( Rectangle *rect );
     
+    double get_radius();
+protected:
     void calc_AABB();
+    void calc_mass();
 private:
+       
     double m_radius;
 };
 
@@ -92,15 +98,18 @@ public:
     Rectangle( vec2d position, double width, double height ) : Rectangle( position, width, height, vec2d { 0, 0 } ) {}
     void draw( SDL_Renderer *renderer );
     
-    void calc_AABB();
+    
     
     bool intersect_visit( IEntity *e );
     
     bool intersect( Circle *circ );
     
     bool intersect( Rectangle *rect );
-    
+protected:
+    void calc_AABB();
+    void calc_mass();
 private:
+
     double m_width;
     double m_height;
 };

@@ -60,10 +60,10 @@ Circle::Circle ( vec2d position, double radius, vec2d velocity )
     m_velocity = velocity;
     calc_AABB();
     
+    m_material.density = 1;
     m_material.restitution = 1;
     
-    m_mass_data.mass = M_PI * radius * radius;
-    m_mass_data.inv_mass = 1 / m_mass_data.mass;
+    calc_mass();
 }
 
 void Circle::calc_AABB()
@@ -73,6 +73,13 @@ void Circle::calc_AABB()
     m_aabb.max.x = m_position.x + m_radius;
     m_aabb.max.y = m_position.y + m_radius;
 }
+
+void Circle::calc_mass()
+{
+    m_mass_data.mass = M_PI * m_radius * m_radius * m_material.density;
+    m_mass_data.inv_mass = 1 / m_mass_data.mass;
+}
+
 
 void Circle::draw ( SDL_Renderer* renderer )
 {
@@ -86,7 +93,7 @@ bool Circle::intersect_visit ( IEntity* e )
 
 bool Circle::intersect ( Rectangle* rect )
 {
-    printf( "Intersecting a Rectangle\n" );
+    circle_vs_rectangle( this, rect );
     return true;
 }
 
@@ -100,25 +107,6 @@ bool Circle::intersect ( Circle* circ )
     {
         vec2d normal = AtoB.normalize();
         vec2d approach = circ->m_velocity - m_velocity;
-        /*
-        float vel_along_normal = vec2d::dot( normal, approach );
-        
-        if( vel_along_normal > 0 )
-        {
-            printf( "Already separating!\n" );
-        }
-        else
-        {
-            double max_restitution = std::max( m_material.restitution, circ->m_material.restitution );
-            double j = ( 1 + max_restitution ) * vel_along_normal / ( m_mass_data.inv_mass + circ->m_mass_data.inv_mass );
-            m_velocity.x += j * normal.x * m_mass_data.inv_mass;
-            m_velocity.y += j * normal.y * m_mass_data.inv_mass;
-            circ->m_velocity.x -= j * normal.x * circ->m_mass_data.inv_mass;
-            circ->m_velocity.y -= j * normal.y * circ->m_mass_data.inv_mass;
-            
-            
-        }
-        */
         
         resolve_collision( normal, approach, circ );
         return true;
@@ -126,15 +114,22 @@ bool Circle::intersect ( Circle* circ )
     return false;
 }
 
+double Circle::get_radius()
+{
+    return m_radius;
+}
+
+
 Rectangle::Rectangle ( vec2d position, double width, double height, vec2d velocity ) : m_width( width ), m_height( height )
 {
     m_position = position;
     m_velocity = velocity;
+    calc_AABB();
     
+    m_material.density = 1;
     m_material.restitution = 1;
     
-    m_mass_data.mass = width * height;
-    m_mass_data.inv_mass = 1 / m_mass_data.mass;
+    calc_mass();
 }
 
 
@@ -151,6 +146,21 @@ void Rectangle::calc_AABB()
     m_aabb.max.y = m_position.y + m_height / 2;
 }
 
+void Rectangle::calc_mass()
+{
+    m_mass_data.mass =  m_width * m_height * m_material.density;
+    if( m_mass_data.mass )
+    {
+        m_mass_data.inv_mass = 1 / m_mass_data.mass;
+    }
+    else
+    {
+        m_mass_data.inv_mass = 0;
+    }
+    
+}
+
+
 bool Rectangle::intersect_visit ( IEntity* e )
 {
     return e->intersect( this );
@@ -158,6 +168,7 @@ bool Rectangle::intersect_visit ( IEntity* e )
 
 bool Rectangle::intersect ( Circle* circ )
 {
+    circle_vs_rectangle( circ, this );
     return false;
 }
 
@@ -214,3 +225,58 @@ void IEntity::resolve_collision ( vec2d normal, vec2d approach, IEntity* collide
     collider->m_velocity.y -= j * normal.y * collider->m_mass_data.inv_mass;
 }
 
+bool clamp_to_edge( vec2d *v, AABB range )
+{
+    double half_x = range.max.x - range.min.x;
+    double half_y = range.max.y - range.min.y;
+    bool outside = false; 
+    
+    if( abs( v->x - range.min.x - half_x ) > half_x || abs( v->y - range.min.y - half_y ) > half_y )
+    {
+        outside = true;
+        if( v->x < range.min.x ) v->x = range.min.x;
+        else if( v->x > range.max.x ) v->x = range.max.x;
+        if( v->y < range.min.y ) v->y = range.min.y;
+        else if( v->y > range.max.y ) v->y = range.max.y;
+    }
+    else
+    {
+        if( v->y - range.min.y > v->x - range.min.x )
+        {
+            if( v->y - range.min.y > -( v->x - range.min.x ) + half_y * 2 )
+            {
+                v->y = range.max.y;
+            }
+            else
+            {
+                v->x = range.min.x;
+            }
+        }
+        else
+        {
+            if( v->y - range.min.y > -( v->x - range.min.x ) + half_y * 2  )
+            {
+                v->x = range.max.x;
+            }
+            else
+            {
+                v->y = range.min.y;
+            }
+        }
+    }
+    return outside;
+}
+
+void IEntity::circle_vs_rectangle( Circle *circ, Rectangle *rect )
+{
+    vec2d closest = circ->m_position;
+    
+    bool outside = clamp_to_edge( &closest, rect->m_aabb );
+    
+    vec2d normal = ( closest - circ->m_position ).normalize();
+    if( !outside ) normal *= -1;
+    
+    vec2d approach = rect->m_velocity - circ->m_velocity;
+    
+    circ->resolve_collision( normal, approach, rect );
+}
