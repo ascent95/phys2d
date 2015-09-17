@@ -157,7 +157,6 @@ void Rectangle::calc_mass()
     {
         m_mass_data.inv_mass = 0;
     }
-    
 }
 
 
@@ -227,8 +226,8 @@ void IEntity::resolve_collision ( vec2d normal, vec2d approach, IEntity* collide
 
 bool clamp_to_edge( vec2d *v, AABB range )
 {
-    double half_x = range.max.x - range.min.x;
-    double half_y = range.max.y - range.min.y;
+    double half_x = ( range.max.x - range.min.x ) / 2;
+    double half_y = ( range.max.y - range.min.y ) / 2;
     bool outside = false; 
     
     if( abs( v->x - range.min.x - half_x ) > half_x || abs( v->y - range.min.y - half_y ) > half_y )
