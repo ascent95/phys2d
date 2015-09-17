@@ -271,11 +271,15 @@ void IEntity::circle_vs_rectangle( Circle *circ, Rectangle *rect )
     vec2d closest = circ->m_position;
     
     bool outside = clamp_to_edge( &closest, rect->m_aabb );
+    double penetration = circ->get_radius() - ( closest - circ->m_position ).length();
     
-    vec2d normal = ( closest - circ->m_position ).normalize();
-    if( !outside ) normal *= -1;
-    
-    vec2d approach = rect->m_velocity - circ->m_velocity;
-    
-    circ->resolve_collision( normal, approach, rect );
+    if( penetration > 0 )
+    {
+        vec2d normal = ( closest - circ->m_position ).normalize();
+        if( !outside ) normal *= -1;
+        
+        vec2d approach = rect->m_velocity - circ->m_velocity;
+        
+        circ->resolve_collision( normal, approach, rect );
+    }
 }
