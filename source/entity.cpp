@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 
 
 void IEntity::set_id ( int new_id )
@@ -53,15 +54,17 @@ void IEntity::set_colour ( Uint32 colour )
 
 
 
-Circle::Circle ( vec2d position, double radius, vec2d velocity )
+Circle::Circle ( vec2d position, double radius, double density, vec2d velocity )
 {
     m_position = position;
     m_radius = radius;
     m_velocity = velocity;
     calc_AABB();
     
-    m_material.density = 1;
+    m_material.density = density;
     m_material.restitution = 1;
+    
+    assert( m_material.density || m_velocity.length() == 0 );
     
     calc_mass();
 }
@@ -77,9 +80,16 @@ void Circle::calc_AABB()
 void Circle::calc_mass()
 {
     m_mass_data.mass = M_PI * m_radius * m_radius * m_material.density;
-    m_mass_data.inv_mass = 1 / m_mass_data.mass;
+    if( m_mass_data.mass )
+    {
+        m_mass_data.inv_mass = 1 / m_mass_data.mass;
+    }
+    else
+    {
+        m_mass_data.inv_mass = 0;
+    }
+    
 }
-
 
 void Circle::draw ( SDL_Renderer* renderer )
 {
@@ -120,13 +130,13 @@ double Circle::get_radius()
 }
 
 
-Rectangle::Rectangle ( vec2d position, double width, double height, vec2d velocity ) : m_width( width ), m_height( height )
+Rectangle::Rectangle ( vec2d position, double width, double height, double density, vec2d velocity ) : m_width( width ), m_height( height )
 {
     m_position = position;
     m_velocity = velocity;
     calc_AABB();
     
-    m_material.density = 1;
+    m_material.density = density;
     m_material.restitution = 1;
     
     calc_mass();
@@ -155,7 +165,7 @@ void Rectangle::calc_mass()
     }
     else
     {
-        m_mass_data.inv_mass = 0;
+        m_mass_data.inv_mass = 0; //Infinite mass is represented by 0 mass and inv_mass
     }
 }
 

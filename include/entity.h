@@ -74,8 +74,8 @@ class Circle : public IEntity
 {
 public:
     
-    Circle( vec2d position, double radius, vec2d velocity );
-    Circle( vec2d position, double radius ) : Circle( position, radius, vec2d {0,0} ) {}
+    Circle( vec2d position, double radius, double density, vec2d velocity );
+    Circle( vec2d position, double radius ) : Circle( position, radius, 1, vec2d {0,0} ) {}
     void draw( SDL_Renderer *renderer );
     
     bool intersect_visit( IEntity *e );
@@ -94,8 +94,8 @@ private:
 class Rectangle : public IEntity
 {
 public:
-    Rectangle( vec2d position, double width, double height, vec2d velocity );
-    Rectangle( vec2d position, double width, double height ) : Rectangle( position, width, height, vec2d { 0, 0 } ) {}
+    Rectangle( vec2d position, double width, double height, double density, vec2d velocity );
+    Rectangle( vec2d position, double width, double height ) : Rectangle( position, width, height, 1, vec2d { 0, 0 } ) {}
     void draw( SDL_Renderer *renderer );
     
     
