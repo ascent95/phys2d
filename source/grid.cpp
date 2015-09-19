@@ -89,11 +89,7 @@ void Grid::narrow_phase ( Pair_Cache* ps )
 {
     for( std::vector< Pair >::iterator it = ps->entity_pairs.begin(); it != ps->entity_pairs.end(); ++it )
     {
-        if( (*it).a->intersect_visit( (*it).b ) )
-        {
-            //They intersect and the collision has been resolved
-            
-        }
+        (*it).a->intersect_visit( (*it).b ); //If they intersect then it resolves the collision.
     }
 }
 

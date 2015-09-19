@@ -45,12 +45,16 @@ void World::run()
     m_grid->add( &test4 );
     */
     
-    Circle test1 ( vec2d { 250, 50 }, 10, 1, vec2d { 50, 50 } );
-    Rectangle test2 ( vec2d { 400, 200 }, 50, 50 , 0, vec2d { 0, 0 } );
-    //Circle test3 ( vec2d { 450, 250 }, 10, vec2d { -50, -50 } );
+    Circle test1 ( vec2d { 350, 350 }, 10 );
+    //Rectangle test2 ( vec2d { 400, 200 }, 10, 50 , 1, vec2d { 0, 0 } );
+    //Circle test2 ( vec2d { 251, 250 }, 30 );
+    
+    Rectangle test3 ( vec2d { 400, 350 }, 200, 200 );
+    Rectangle test4 ( vec2d { 400, 330 }, 20, 20 );
     m_grid->add( &test1 );
-    m_grid->add( &test2 );
-    //m_grid->add( &test3 );
+    //m_grid->add( &test2 );
+    m_grid->add( &test3 );
+    m_grid->add( &test4 );
     while( m_screen->is_running() )
     {
         const double current_time = get_time();

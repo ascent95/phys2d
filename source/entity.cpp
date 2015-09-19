@@ -27,6 +27,11 @@ AABB IEntity::get_AABB()
     return m_aabb;
 }
 
+double IEntity::get_mass()
+{
+    return m_mass_data.mass;
+}
+
 void IEntity::update ( double dt )
 {
     m_position.x += m_velocity.x * dt;
@@ -119,6 +124,7 @@ bool Circle::intersect ( Circle* circ )
         vec2d approach = circ->m_velocity - m_velocity;
         
         resolve_collision( normal, approach, circ );
+        positional_correction( penetration, normal, circ );
         return true;
     }
     return false;
@@ -201,18 +207,22 @@ bool Rectangle::intersect ( Rectangle* rect )
             //There is a collision
             
             vec2d normal ( 0, 0 );
+            double penetration;
             if( y_overlap > x_overlap )
             {
                 normal.x = AtoB.x;
+                penetration = x_overlap;
             }
             else
             {
                 normal.y = AtoB.y;
+                penetration = y_overlap;
             }
             normal.normalize();
             vec2d approach = rect->m_velocity - m_velocity;
             
             resolve_collision( normal, approach, rect );
+            positional_correction( penetration, normal, rect );
         }
     }
     return false;
@@ -291,5 +301,22 @@ void IEntity::circle_vs_rectangle( Circle *circ, Rectangle *rect )
         vec2d approach = rect->m_velocity - circ->m_velocity;
         
         circ->resolve_collision( normal, approach, rect );
+        circ->positional_correction( penetration, normal, rect );
+    }
+}
+
+void IEntity::positional_correction( double penetration, vec2d normal, IEntity *e )
+{
+    double percent = 0.2;
+    double slop = 0.1;
+    if( normal.length() == 0 ) normal.x = 1; //Makes sure that if they are centred on each other then it still corrects the problem.
+    vec2d correction = normal * penetration * percent;
+    if( correction.length() > slop ) 
+    {
+        correction /= e->m_mass_data.inv_mass + m_mass_data.inv_mass;
+        vec2d tmp = correction * e->m_mass_data.inv_mass; //Problem with lvalues that needs to be sorted. Could only do it this way.
+        e->m_position += tmp;
+        tmp = correction * m_mass_data.inv_mass;
+        m_position -= tmp;
     }
 }

@@ -43,6 +43,8 @@ public:
     
     virtual bool intersect( Rectangle *rect ) = 0;
     
+    virtual void positional_correction( double penetration, vec2d normal, IEntity *e ); 
+    
     void update( double dt );
     
     void add_force( vec2d new_force );
@@ -53,6 +55,7 @@ public:
 
     int get_id();
     AABB get_AABB();
+    double get_mass();
     void set_colour( Uint32 colour );
     void set_id( int new_id );    
 protected:
