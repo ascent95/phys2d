@@ -6,6 +6,19 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
+class Circle;
+class Rectangle;
+class IWorld;
+
+class Renderer //will use visitor pattern to move all graphics calls to Renderer class.
+{
+public:
+    void render( const Circle& ent );
+    void render( const Rectangle& ent );
+private:
+    SDL_Renderer *m_renderer;
+};
+
 class IScreen
 {
 public:
@@ -17,10 +30,8 @@ public:
     virtual void handle_events() = 0;
     virtual bool is_running() = 0;
     
-    virtual SDL_Renderer *get_renderer() = 0;
+    virtual Renderer& get_renderer() = 0;
 };
-
-class IWorld;
 
 class Screen : public IScreen
 {
@@ -34,11 +45,11 @@ class Screen : public IScreen
         void handle_events();
         bool is_running();
         
-        SDL_Renderer *get_renderer();
+        Renderer& get_renderer();
 
     private:
         SDL_Window *m_window;
-        SDL_Renderer *m_renderer;
+        Renderer *m_renderer;
         IWorld *m_world;
         SDL_Event m_event; //For checking window close
         bool m_running;

@@ -86,7 +86,7 @@ double World::get_time()
 void World::draw_entities()
 {
     std::vector< IEntity* > *entities = m_grid->get_entities();
-    SDL_Renderer *renderer = m_screen->get_renderer();
+    Renderer& r = m_screen->get_renderer();
     
     for( std::vector< IEntity* >::iterator it = entities->begin(); it != entities->end(); ++it )
     {

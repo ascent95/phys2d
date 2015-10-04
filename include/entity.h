@@ -27,6 +27,7 @@ struct AABB
 
 class Circle;
 class Rectangle;
+class Renderer;
 
 class IEntity
 {
@@ -35,7 +36,7 @@ public:
     
     ~IEntity() {}
     
-    virtual void draw( SDL_Renderer *renderer ) = 0; //Draws the shape on the screen.
+    void draw( Renderer& r ); //Draws the shape on the screen.
     
     virtual bool intersect_visit( IEntity *e ) = 0;
     
@@ -48,6 +49,8 @@ public:
     void update( double dt );
     
     void add_force( vec2d new_force );
+    
+    void apply_forces();
 
     bool intersect_broad( IEntity *e );
     
@@ -79,7 +82,7 @@ public:
     
     Circle( vec2d position, double radius, double density, vec2d velocity );
     Circle( vec2d position, double radius ) : Circle( position, radius, 1, vec2d {0,0} ) {}
-    void draw( SDL_Renderer *renderer );
+    void draw( Renderer& r );
     
     bool intersect_visit( IEntity *e );
     bool intersect( Circle *circ );
@@ -99,9 +102,7 @@ class Rectangle : public IEntity
 public:
     Rectangle( vec2d position, double width, double height, double density, vec2d velocity );
     Rectangle( vec2d position, double width, double height ) : Rectangle( position, width, height, 1, vec2d { 0, 0 } ) {}
-    void draw( SDL_Renderer *renderer );
-    
-    
+    void draw( Renderer& r );
     
     bool intersect_visit( IEntity *e );
     

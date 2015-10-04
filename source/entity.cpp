@@ -10,6 +10,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
+#include <screen.h>
+
+void IEntity::draw ( Renderer& r )
+{
+    r.render( *this );
+}
 
 
 void IEntity::set_id ( int new_id )
@@ -57,6 +63,15 @@ void IEntity::set_colour ( Uint32 colour )
     m_colour = colour;
 }
 
+void IEntity::add_force ( vec2d new_force )
+{
+    m_force += new_force;
+}
+
+void IEntity::apply_forces()
+{
+    
+}
 
 
 Circle::Circle ( vec2d position, double radius, double density, vec2d velocity )
