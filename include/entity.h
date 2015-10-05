@@ -36,7 +36,7 @@ public:
     
     ~IEntity() {}
     
-    void draw( Renderer& r ); //Draws the shape on the screen.
+    virtual void draw( Renderer& r ) = 0; //Uses visitor pattern.
     
     virtual bool intersect_visit( IEntity *e ) = 0;
     
@@ -56,9 +56,11 @@ public:
     
     void resolve_collision( vec2d normal, vec2d approach, IEntity *collider );
 
-    int get_id();
-    AABB get_AABB();
-    double get_mass();
+    int get_id() const;
+    AABB get_AABB() const;
+    double get_mass() const;
+    vec2d get_position() const;
+    Uint32 get_colour() const;
     void set_colour( Uint32 colour );
     void set_id( int new_id );    
 protected:
@@ -88,7 +90,7 @@ public:
     bool intersect( Circle *circ );
     bool intersect( Rectangle *rect );
     
-    double get_radius();
+    double get_radius() const;
 protected:
     void calc_AABB();
     void calc_mass();

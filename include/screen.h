@@ -13,8 +13,14 @@ class IWorld;
 class Renderer //will use visitor pattern to move all graphics calls to Renderer class.
 {
 public:
-    void render( const Circle& ent );
-    void render( const Rectangle& ent );
+    bool init_renderer( SDL_Window* window );
+    
+    void draw( const Circle& ent );
+    void draw( const Rectangle& ent );
+    
+    void clear();
+    void render();
+    void quit();
 private:
     SDL_Renderer *m_renderer;
 };

@@ -5,35 +5,38 @@
 
 #include "entity.h"
 #include "vec2.h"
-#include <SDL2/SDL2_gfxPrimitives.h>
-#include <SDL2/SDL.h>
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
 #include <screen.h>
-
-void IEntity::draw ( Renderer& r )
-{
-    r.render( *this );
-}
-
 
 void IEntity::set_id ( int new_id )
 {
     m_id = new_id;
 }
 
-int IEntity::get_id()
+int IEntity::get_id() const
 {
     return m_id;
 }
 
-AABB IEntity::get_AABB()
+AABB IEntity::get_AABB() const
 {
     return m_aabb;
 }
 
-double IEntity::get_mass()
+vec2d IEntity::get_position() const
+{
+    return m_position;
+}
+
+Uint32 IEntity::get_colour() const
+{
+    return m_colour;
+}
+
+
+double IEntity::get_mass() const
 {
     return m_mass_data.mass;
 }
@@ -89,31 +92,9 @@ Circle::Circle ( vec2d position, double radius, double density, vec2d velocity )
     calc_mass();
 }
 
-void Circle::calc_AABB()
+void Circle::draw ( Renderer& r )
 {
-    m_aabb.min.x = m_position.x - m_radius;
-    m_aabb.min.y = m_position.y - m_radius;
-    m_aabb.max.x = m_position.x + m_radius;
-    m_aabb.max.y = m_position.y + m_radius;
-}
-
-void Circle::calc_mass()
-{
-    m_mass_data.mass = M_PI * m_radius * m_radius * m_material.density;
-    if( m_mass_data.mass )
-    {
-        m_mass_data.inv_mass = 1 / m_mass_data.mass;
-    }
-    else
-    {
-        m_mass_data.inv_mass = 0;
-    }
-    
-}
-
-void Circle::draw ( SDL_Renderer* renderer )
-{
-    circleColor( renderer, m_position.x, m_position.y, m_radius, m_colour);
+    r.draw( *this );
 }
 
 bool Circle::intersect_visit ( IEntity* e )
@@ -145,11 +126,32 @@ bool Circle::intersect ( Circle* circ )
     return false;
 }
 
-double Circle::get_radius()
+double Circle::get_radius() const
 {
     return m_radius;
 }
 
+void Circle::calc_AABB()
+{
+    m_aabb.min.x = m_position.x - m_radius;
+    m_aabb.min.y = m_position.y - m_radius;
+    m_aabb.max.x = m_position.x + m_radius;
+    m_aabb.max.y = m_position.y + m_radius;
+}
+
+void Circle::calc_mass()
+{
+    m_mass_data.mass = M_PI * m_radius * m_radius * m_material.density;
+    if( m_mass_data.mass )
+    {
+        m_mass_data.inv_mass = 1 / m_mass_data.mass;
+    }
+    else
+    {
+        m_mass_data.inv_mass = 0;
+    }
+    
+}
 
 Rectangle::Rectangle ( vec2d position, double width, double height, double density, vec2d velocity ) : m_width( width ), m_height( height )
 {
@@ -164,9 +166,9 @@ Rectangle::Rectangle ( vec2d position, double width, double height, double densi
 }
 
 
-void Rectangle::draw ( SDL_Renderer* renderer )
+void Rectangle::draw ( Renderer& r )
 {
-    rectangleColor( renderer, m_aabb.min.x, m_aabb.min.y, m_aabb.max.x, m_aabb.max.y, m_colour );
+    r.draw( *this );
 }
 
 void Rectangle::calc_AABB()

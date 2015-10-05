@@ -90,6 +90,6 @@ void World::draw_entities()
     
     for( std::vector< IEntity* >::iterator it = entities->begin(); it != entities->end(); ++it )
     {
-        (*it)->draw( renderer );
+        (*it)->draw( r );
     }
 }
