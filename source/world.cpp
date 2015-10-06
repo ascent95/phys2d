@@ -53,6 +53,9 @@ void World::run()
     m_grid->add( &test5 );
     m_grid->add( &test6 );
     
+    Circle test7 ( vec2d { 100, 500 }, 100, 1, vec2d { 200, -200 } );
+    m_grid->add( &test7 );
+    
     while( m_screen->is_running() )
     {
         const double current_time = get_time();

@@ -43,6 +43,10 @@ double IEntity::get_mass() const
 
 void IEntity::update ( double dt )
 {
+    vec2d v;
+    v.y = m_mass_data.mass * 9.81;
+    add_force( v );
+    apply_forces( dt );
     m_position.x += m_velocity.x * dt;
     m_position.y += m_velocity.y * dt;
     calc_AABB();
@@ -71,9 +75,17 @@ void IEntity::add_force ( vec2d new_force )
     m_force += new_force;
 }
 
-void IEntity::apply_forces()
+void IEntity::apply_forces( double dt )
 {
+    double tmp = m_mass_data.inv_mass * dt / 2;
+    m_velocity.x += tmp * m_force.x;
+    m_velocity.y += tmp * m_force.y;
     
+    m_position.x += m_velocity.x * dt;
+    m_position.y += m_velocity.y * dt;
+    
+    m_velocity.x += tmp * m_force.x;
+    m_velocity.y += tmp * m_force.y;
 }
 
 

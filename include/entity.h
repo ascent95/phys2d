@@ -50,8 +50,6 @@ public:
     
     void add_force( vec2d new_force );
     
-    void apply_forces();
-
     bool intersect_broad( IEntity *e );
     
     void resolve_collision( vec2d normal, vec2d approach, IEntity *collider );
@@ -76,6 +74,9 @@ protected:
     AABB m_aabb;
     int m_id;
     Uint32 m_colour;
+    
+private:
+    void apply_forces( double dt );
 };
 
 class Circle : public IEntity
